@@ -1,45 +1,73 @@
-from operator import contains
+from io import TextIOWrapper
 import Robot
 
+
 def main():
-    
-    robots = []         # A list of all the active robots
-    activeRobot = ()    # The index of the current active robot
-    
+
+    robots: list[Robot.Robot] = []  # A list of all the active robots
+    activeRobot: int = ()           # The index of the current active robot
+    debug = False                   # Enables debug print statements
+
     # Open and read in the input file
-    input = open('input.txt', 'r')
+    input = open('Tests/bigTest.txt', 'r')
     lines = input.readlines()
 
     # Loop over every instruction in the input file
     for line in lines:
-        # Check if the place command has been run yet, if not check if
-        # the current command is place
-        if len(robots) == 0 and not "PLACE" in line:
+
+        instruction: str = line.split()
+
+        if debug:
+            print(instruction)
+
+        # Check if the place command has been run yet, if not check if the
+        # current command is place
+        if len(robots) == 0 and instruction[0] != "PLACE":
             continue
-        
+
         # Parse the current instruction
-        if "PLACE" in line:
-            #print(f"Ran place with {int(line[6])} {int(line[8])} {line[10:].strip()}")
-            temp = Robot.Robot()
-            temp.place(int(line[6]), int(line[8]), line[10:].strip())
-            robots.append(temp)
-            activeRobot = len(robots) - 1
-        elif "MOVE" in line:
-            #print("Ran move")
+        if instruction[0] == "PLACE":
+            values = instruction[1].split(',')
+            if debug:
+                print(
+                    (
+                        f'Ran place with {int(values[0])} {int(values[1])}'
+                        f' {values[2]}'
+                    )
+                )
+            robo = Robot.Robot()
+            if robo.place(int(values[0]), int(values[1]), values[2]):
+                robots.append(robo)
+                activeRobot = len(robots) - 1
+        elif instruction[0] == "MOVE":
+            if debug:
+                print("Ran move")
             robots[activeRobot].move()
-        elif "LEFT" in line:
-            #print("Ran left")
+        elif instruction[0] == "LEFT":
+            if debug:
+                print("Ran left")
             robots[activeRobot].rotate('L')
-        elif "RIGHT" in line:
-            #print("Ran right")
+        elif instruction[0] == "RIGHT":
+            if debug:
+                print("Ran right")
             robots[activeRobot].rotate('R')
-        elif "REPORT" in line:
-            #print("Ran report")
+        elif instruction[0] == "REPORT":
+            if debug:
+                print("Ran report")
             robots[activeRobot].report()
-        elif "ROBOT" in line:
-            activeRobot = int(line[6])
+        elif instruction[0] == "ROBOT":
+            inputIndex = int(instruction[1]) - 1
+            if inputIndex >= len(robots):
+                print(
+                    (
+                        f"Failed to switch robots, {inputIndex + 1} is not a"
+                        " valid robot"
+                    )
+                )
+            else:
+                activeRobot = inputIndex
         else:
             print(f"The command {line.strip()} is not valid")
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
