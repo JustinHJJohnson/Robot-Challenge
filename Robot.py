@@ -1,5 +1,6 @@
 import enum
 from tokenize import String
+from xmlrpc.client import Boolean
 
 # The size of the table
 tableX = 5
@@ -24,6 +25,7 @@ class Robot:
     x: int
     y: int
     dir: Direction
+    walk: Boolean
 
     def place(self, x: int, y: int, dir: str) -> bool:
         '''Place the robot on the table'''
@@ -58,24 +60,95 @@ class Robot:
                 rotate. (Please use L or R)"""
             )
 
+    def changeMoveDistance(self, state: str):
+        if state == "RUN":
+            self.walk = False
+        else:
+            self.walk = True
+
     def move(self):
         '''Move the robot forward one space in the direction it is facing,
         making sure it doesn't fall off the table'''
 
+        #spacesToMoveBy
+        if self.walk:
+            spacesToMoveBy = 1
+        else:
+            spacesToMoveBy = 2
+        
         if self.dir == Direction.NORTH:
             if self.y != tableY - 1:
-                self.y += 1
+                if self.y == tableY - spacesToMoveBy:
+                    self.y += spacesToMoveBy - 1
+                else:
+                    self.y += spacesToMoveBy
         if self.dir == Direction.EAST:
             if self.x != tableX - 1:
-                self.x += 1
+                if self.x == tableX - spacesToMoveBy:
+                    self.x += spacesToMoveBy - 1
+                else:
+                    self.x += spacesToMoveBy
         if self.dir == Direction.SOUTH:
             if self.y != 0:
-                self.y -= 1
+                if self.y == 0 + spacesToMoveBy - 1:
+                    self.y -= spacesToMoveBy - 1
+                else:
+                    self.y -= spacesToMoveBy
         if self.dir == Direction.WEST:
             if self.x != 0:
-                self.x -= 1
+                if self.x == 0 + spacesToMoveBy - 1:
+                    self.x -= spacesToMoveBy - 1
+                else:
+                    self.x -= spacesToMoveBy
+
+    def strafe(self, dir: str):
+        '''Move the robot forward one space in the direction it is facing,
+        making sure it doesn't fall off the table'''
+
+        if self.dir == Direction.NORTH:
+            if dir == "L":
+                if self.x != 0:
+                    self.x -= 1
+            else:
+                if self.x != tableX - 1:
+                    self.x += 1
+        if self.dir == Direction.EAST:
+            if dir == "L":
+                if self.y != tableY - 1:
+                    self.y += 1
+            else:
+                if self.y != 0:
+                    self.y -= 1
+        if self.dir == Direction.SOUTH:
+            if dir == "L":
+                if self.x != tableX - 1:
+                    self.x += 1
+            else:
+                if self.x != 0:
+                    self.x -= 1
+        if self.dir == Direction.WEST:
+            if dir == "L":
+                if self.y != 0:
+                    self.y -= 1
+            else:
+                if self.y != tableY - 1:
+                    self.y += 1
+
+    def charge(self):
+        '''Move the robot forward one space in the direction it is facing,
+        making sure it doesn't fall off the table'''
+
+        if self.dir == Direction.NORTH:
+            self.y = tableY - 1
+        if self.dir == Direction.EAST:
+            self.x = tableX - 1
+        if self.dir == Direction.SOUTH:
+            self.y = 0
+        if self.dir == Direction.WEST:
+            self.x = 0
+
 
     def report(self):
         '''Output the robot's position and the direction it is facing'''
 
-        print(f"Robot is at {self.x}, {self.y}, facing {self.dir.name}")
+        print(f"Robot is at {self.x}, {self.y}, facing {self.dir.name}, is walking {self.walk}")

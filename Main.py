@@ -6,10 +6,10 @@ def main():
 
     robots: list[Robot.Robot] = []  # A list of all the active robots
     activeRobot: int = ()           # The index of the current active robot
-    debug = False                   # Enables debug print statements
+    debug = True                   # Enables debug print statements
 
     # Open and read in the input file
-    input = open('Tests/bigTest.txt', 'r')
+    input = open('Tests/walkRunTest.txt', 'r')
     lines = input.readlines()
 
     # Loop over every instruction in the input file
@@ -51,6 +51,26 @@ def main():
             if debug:
                 print("Ran right")
             robots[activeRobot].rotate('R')
+        elif instruction[0] == "STRAFELEFT":
+            if debug:
+                print("Ran strafeleft")
+            robots[activeRobot].strafe('L')
+        elif instruction[0] == "STRAFERIGHT":
+            if debug:
+                print("Ran straferight")
+            robots[activeRobot].strafe('R')
+        elif instruction[0] == "CHARGE":
+            if debug:
+                print("Ran charge")
+            robots[activeRobot].charge()
+        elif instruction[0] == "WALK":
+            if debug:
+                print("Ran walk")
+            robots[activeRobot].changeMoveDistance("WALK")
+        elif instruction[0] == "RUN":
+            if debug:
+                print("Ran run")
+            robots[activeRobot].changeMoveDistance("RUN")
         elif instruction[0] == "REPORT":
             if debug:
                 print("Ran report")
