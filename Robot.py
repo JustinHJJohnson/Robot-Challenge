@@ -75,31 +75,20 @@ class Robot:
             spacesToMoveBy = 1
         else:
             spacesToMoveBy = 2
-        
-        if self.dir == Direction.NORTH:
-            if self.y != tableY - 1:
-                if self.y == tableY - spacesToMoveBy:
-                    self.y += spacesToMoveBy - 1
-                else:
-                    self.y += spacesToMoveBy
-        if self.dir == Direction.EAST:
-            if self.x != tableX - 1:
-                if self.x == tableX - spacesToMoveBy:
-                    self.x += spacesToMoveBy - 1
-                else:
-                    self.x += spacesToMoveBy
-        if self.dir == Direction.SOUTH:
-            if self.y != 0:
-                if self.y == 0 + spacesToMoveBy - 1:
-                    self.y -= spacesToMoveBy - 1
-                else:
-                    self.y -= spacesToMoveBy
-        if self.dir == Direction.WEST:
-            if self.x != 0:
-                if self.x == 0 + spacesToMoveBy - 1:
-                    self.x -= spacesToMoveBy - 1
-                else:
-                    self.x -= spacesToMoveBy
+
+        for i in range(spacesToMoveBy):
+            if self.dir == Direction.NORTH:
+                if self.y != tableY - 1:
+                    self.y += 1
+            if self.dir == Direction.EAST:
+                if self.x != tableX - 1:
+                    self.x += 1
+            if self.dir == Direction.SOUTH:
+                if self.y != 0:
+                    self.y -= 1
+            if self.dir == Direction.WEST:
+                if self.x != 0:
+                    self.x -= 1
 
     def strafe(self, dir: str):
         '''Move the robot forward one space in the direction it is facing,
